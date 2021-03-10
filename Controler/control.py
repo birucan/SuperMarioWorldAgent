@@ -8,12 +8,21 @@ def main():
     while True:
         obs, rew, done, info = env.step(movRightOrJump())
         env.render()
-        print("Reward ", rew, "Done: ", done, "info: ", info)
+
+
+        timer = (info['t1']*100)+(info['t2']*10)+(info['t3'])
+
+        print("Reward ", rew, "Done: ", done,"info: ", info)
+
         if(info['lives'] == 3):
             done= True
         if done:
             obs = env.reset()
     env.close()
+
+
+
+
 
 def movRightOrJump():
     if(random.random()>=0.5):
