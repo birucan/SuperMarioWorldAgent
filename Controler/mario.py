@@ -4,7 +4,6 @@ import cv2
 import neat
 import pickle
 import math
-from popmanager import *
 
 env =  retro.make(game='SuperMarioWorld-Snes',state='YoshiIsland2.state')
 
@@ -55,7 +54,10 @@ def evaluateGenome(genomes, config):
             image = cv2.resize(image,(newResX,newResY))
             image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
             image = np.reshape(image,(newResX, newResY))
-
+            '''
+            cv2.imshow('main', image)
+            cv2.waitKey(1)
+            '''
             env.render()
 
             screenArray= np.ndarray.flatten(image)
@@ -85,7 +87,8 @@ def evaluateGenome(genomes, config):
 
             if(endTimer!=0):
                 genome.fitness = fitness_current
-                fitness_current+=500
+                fitness_current+=timer*10
+
                 if fitness_current > current_max_fitness:
                     current_max_fitness = fitness_current
                     counter = 0
@@ -134,7 +137,7 @@ config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                      'neatconfig')
 # create population
 p = neat.Population(config)
-
+p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-46')
 # add reporters so you can get some nice stats
 p.add_reporter(neat.StdOutReporter(True))
 stats = neat.StatisticsReporter()
@@ -143,9 +146,6 @@ p.add_reporter(stats)
 # save a check point file every 10 iterations
 p.add_reporter(neat.Checkpointer(10))
 
-# if you have already trained some, and want to restore, uncomment this line and change the 'neat-checkpoint-10'
-# to whichever file you want to use (they'll all be named neat-checkpoint-somenumber)
-#p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-10')
 
 # this line runs the previous eval_genomes function. Once done, the best is set to winner
 winner = p.run(evaluateGenome)
