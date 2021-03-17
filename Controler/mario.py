@@ -4,6 +4,7 @@ import cv2
 import neat
 import pickle
 import math
+from popmanager import *
 
 env =  retro.make(game='SuperMarioWorld-Snes',state='YoshiIsland2.state')
 
@@ -29,9 +30,8 @@ def evaluateGenome(genomes, config):
         newResY= math.floor(resY/8)
 
         nNeat = neat.nn.recurrent.RecurrentNetwork.create(genome, config)
-
-        curMaxFitness=0
-        fitnessCurrent=0
+        current_max_fitness = 0
+        fitness_current = 0
         frame=0
         counter=0
         marioX=0
@@ -62,7 +62,7 @@ def evaluateGenome(genomes, config):
 
             nnOutput =  nNeat.activate(screenArray)
 
-            image,rew,done,info = env.step(nnOutput)
+            image, rew, done, info = env.step(nnOutput)
 
             marioX=info['marioX']
             marioY=info['marioY']
@@ -72,44 +72,58 @@ def evaluateGenome(genomes, config):
 
             ## TEMP fitness:
             if((marioX)>maxX):
-                fitnessCurrent+=1+info['t1']
+                fitness_current+=1
                 maxX=marioX
+                genome.fitness = fitness_current
 
-            if fitnessCurrent > curMaxFitness:
-                curMaxFitness = fitnessCurrent
+            if fitness_current > current_max_fitness:
+                current_max_fitness = fitness_current
                 counter = 0
             else:
                 counter += 1
 
 
             if(endTimer!=0):
-                fitnessCurrent+=500
-                if fitnessCurrent > curMaxFitness:
-                    curMaxFitness = fitnessCurrent
+                genome.fitness = fitness_current
+                fitness_current+=500
+                if fitness_current > current_max_fitness:
+                    current_max_fitness = fitness_current
                     counter = 0
 
                 done= True
-                print("Genome: ", genome_id, ", Fitness Achieved: ", fitnessCurrent)
+                print("Genome: ", genome_id, ", Fitness Achieved: ", fitness_current)
 
 
+
+            if(counter>=275):
+                genome.fitness = fitness_current
+                done= True
+                print("Genome: ", genome_id, ", Fitness Achieved: ", fitness_current)
+
+            '''
             if(marioX!=marioStillX):
                 stillTimer=0
             else:
                 stillTimer+=1
 
 
-            #print(stillTimer)
+            print(stillTimer)
             if(stillTimer>=500 ):
                 done= True
                 print("Genome: ", genome_id, ", Fitness Achieved: ", fitnessCurrent)
                 stillTimer=0
 
             marioStillX=marioX
+            '''
 
             if(lives!=curLives):
                 if(curLives!=0):
-                    print("Genome: ", genome_id, ", Fitness Achieved: ", fitnessCurrent)
+                    print("Genome: ", genome_id, ", Fitness Achieved: ", fitness_current)
             curLives=lives
+
+            genome.fitness = fitness_current
+
+
 
 
 
