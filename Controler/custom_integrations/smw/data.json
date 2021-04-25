@@ -1,0 +1,44 @@
+{
+  "info": {
+    "coins": {
+      "address": 8261055,
+      "type": "|u1"
+    },
+    "endTimer": {
+      "address": 8262803,
+      "type": "|u1"
+    },
+    "lives": {
+      "address": 8261054,
+      "type": "|i1"
+    },
+    "marioX": {
+      "address": 8257684,
+      "type": "<u2"
+    },
+    "marioY": {
+      "address": 8257686,
+      "type": "<u2"
+    },
+    "paused": {
+      "address": 8262612,
+      "type": "|u1"
+    },
+    "score": {
+      "address": 8261428,
+      "type": "<u4"
+    },
+    "t1": {
+      "address": 8261425,
+      "type": "|u1"
+    },
+    "t2": {
+      "address": 8261426,
+      "type": "|u1"
+    },
+    "t3": {
+      "address": 8261427,
+      "type": "|u1"
+    }
+  }
+}

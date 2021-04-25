@@ -5,7 +5,7 @@ import neat
 import pickle
 import math
 
-env =  retro.make(game='SuperMarioWorld-Snes',state='YoshiIsland2.state')
+env =  retro.make(game='SuperMarioWorld-Snes',state='DonutPlains1.state')
 
 #actionVariable= env.action_space.sample()
 
@@ -52,13 +52,14 @@ def evaluateGenome(genomes, config):
 
             frame+=1
             image = cv2.resize(image,(newResX,newResY))
+
             image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-            image = np.reshape(image,(newResX, newResY))
-            '''
-            cv2.imshow('main', image)
-            cv2.waitKey(1)
-            '''
+
+            #image = np.reshape(image,(newResX, newResY))
+
             env.render()
+            cv2.imshow('marioView', image)
+            cv2.waitKey(1)
 
             screenArray= np.ndarray.flatten(image)
 
@@ -74,7 +75,7 @@ def evaluateGenome(genomes, config):
 
             ## TEMP fitness:
             if((marioX)>maxX):
-                fitness_current+=1
+                fitness_current=marioX
                 maxX=marioX
                 genome.fitness = fitness_current
 
@@ -98,7 +99,7 @@ def evaluateGenome(genomes, config):
 
 
 
-            if(counter>=275):
+            if(counter>=400):
                 genome.fitness = fitness_current
                 done= True
                 print("Genome: ", genome_id, ", Fitness Achieved: ", fitness_current)
@@ -137,7 +138,7 @@ config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                      'neatconfig')
 # create population
 p = neat.Population(config)
-p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-46')
+p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-74')
 # add reporters so you can get some nice stats
 p.add_reporter(neat.StdOutReporter(True))
 stats = neat.StatisticsReporter()

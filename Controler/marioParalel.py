@@ -124,7 +124,7 @@ config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                      'neatconfig')
 # create population
 p = neat.Population(config)
-#p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-29')
+p = neat.Checkpointer.restore_checkpoint('CurrentY1')
 p.add_reporter(neat.StdOutReporter(True))
 stats = neat.StatisticsReporter()
 p.add_reporter(stats)
